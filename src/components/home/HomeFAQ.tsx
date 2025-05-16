@@ -1,71 +1,43 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import { getFAQs } from "../../data/faqs";
+import { 
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent 
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
 const HomeFAQ = () => {
-  const [openId, setOpenId] = useState<number | null>(null);
   const faqs = getFAQs(4);
   
-  const toggleFAQ = (id: number) => {
-    setOpenId(openId === id ? null : id);
-  };
-
   return (
     <section className="py-16 bg-gray-100">
       <div className="container-custom">
         <h2 className="section-title text-center mb-12">Frequently Asked Questions (FAQ)</h2>
         
         <div className="max-w-3xl mx-auto">
-          {faqs.map((faq) => (
-            <div 
-              key={faq.id}
-              className="mb-4 border-b border-gray-300 pb-4 last:border-0"
-            >
-              <button 
-                onClick={() => toggleFAQ(faq.id)}
-                className="w-full flex justify-between items-center text-left font-semibold text-lg hover:text-gray-700"
-              >
-                {faq.question}
-                <svg 
-                  className={`w-5 h-5 transform transition-transform ${openId === faq.id ? 'rotate-180' : ''}`} 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth="2" 
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-              
-              <AnimatePresence>
-                {openId === faq.id && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
-                  >
-                    <p className="pt-4 text-gray-600">{faq.answer}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq) => (
+              <AccordionItem key={faq.id} value={`item-${faq.id}`}>
+                <AccordionTrigger className="text-left font-semibold text-lg">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-600">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
         
         <div className="text-center mt-8">
-          <Link 
-            to="/faq" 
-            className="inline-block text-black font-semibold hover:underline"
-          >
-            View All FAQs
+          <Link to="/faq">
+            <Button variant="link" className="text-black font-semibold">
+              View All FAQs
+            </Button>
           </Link>
         </div>
       </div>

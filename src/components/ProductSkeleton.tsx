@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export const ProductCardSkeleton = () => {
   return (
-    <Card className="w-full space-y-5 p-4" radius="lg">
+    <Card className="w-full space-y-5 p-4">
       <Skeleton className="rounded-lg">
         <div className="h-[240px] rounded-lg bg-muted" />
       </Skeleton>

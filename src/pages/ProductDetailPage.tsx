@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -7,6 +6,14 @@ import Footer from "../components/Footer";
 import { getProductById, getFeaturedProducts } from "../data/products";
 import { HeartIcon, StarIcon } from "../components/icons/Icons";
 import ProductCard from "../components/ProductCard";
+import { Button } from "@/components/ui/button";
+import { 
+  Select,
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -158,21 +165,16 @@ const ProductDetailPage = () => {
               
               <div className="mb-6">
                 <h3 className="font-semibold mb-3">Select Size: {product.category === "Jordan" ? "Women's Shoes" : "Men's Shoes"}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`w-12 h-10 flex items-center justify-center border rounded-md transition-colors ${
-                        selectedSize === size
-                          ? "border-black bg-black text-white"
-                          : "border-gray-300 hover:border-gray-500"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
+                <Select onValueChange={setSelectedSize} value={selectedSize}>
+                  <SelectTrigger className="w-full max-w-xs">
+                    <SelectValue placeholder="Select a size" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {product.sizes.map((size) => (
+                      <SelectItem key={size} value={size}>{size}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               
               <div className="mb-6">
@@ -180,12 +182,14 @@ const ProductDetailPage = () => {
                   Quantity:
                 </label>
                 <div className="flex w-32">
-                  <button
+                  <Button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-l-md"
+                    variant="outline"
+                    className="rounded-r-none"
+                    size="icon"
                   >
                     -
-                  </button>
+                  </Button>
                   <input
                     type="number"
                     id="quantity"
@@ -194,38 +198,39 @@ const ProductDetailPage = () => {
                     onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
                     className="w-12 h-10 border-t border-b border-gray-300 text-center focus:outline-none"
                   />
-                  <button
+                  <Button
                     onClick={() => setQuantity(quantity + 1)}
-                    className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded-r-md"
+                    variant="outline"
+                    className="rounded-l-none"
+                    size="icon"
                   >
                     +
-                  </button>
+                  </Button>
                 </div>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <button
+                <Button
                   onClick={handleAddToCart}
-                  className="flex-1 bg-black text-white py-3 px-6 rounded-full hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                  className="flex-1 bg-black text-white hover:bg-black/90"
                 >
                   Add To Cart
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleBuyNow}
-                  className="flex-1 bg-white text-black py-3 px-6 rounded-full border border-black hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+                  variant="outline"
+                  className="flex-1"
                 >
                   Buy Now
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => setIsFavorite(!isFavorite)}
-                  className={`w-12 h-12 flex items-center justify-center rounded-full border transition-colors ${
-                    isFavorite
-                      ? "border-red-500 bg-red-50 text-red-500"
-                      : "border-gray-300 hover:border-gray-500"
-                  }`}
+                  variant={isFavorite ? "destructive" : "outline"}
+                  size="icon"
+                  className="w-10 h-10 rounded-full"
                 >
                   <HeartIcon size={20} filled={isFavorite} />
-                </button>
+                </Button>
               </div>
               
               <div className="mb-8">
