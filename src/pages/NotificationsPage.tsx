@@ -3,11 +3,9 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { toast } from "@/components/ui/sonner";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Card } from "@/components/ui/card";
+import { addToast } from "@/components/ui/hero-toast";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Alert, Button } from "@/components/ui/hero-ui";
 
 type Notification = {
   id: number;
@@ -61,8 +59,17 @@ const NotificationsPage = () => {
       type: "order"
     }
   ]);
+  
+  const [isVisible, setIsVisible] = useState<{[key: number]: boolean}>({});
 
   useEffect(() => {
+    // Initialize all notifications as visible
+    const initialVisibility: {[key: number]: boolean} = {};
+    notifications.forEach(notification => {
+      initialVisibility[notification.id] = true;
+    });
+    setIsVisible(initialVisibility);
+    
     window.scrollTo(0, 0);
     document.title = "Notifications - PrimeShop";
   }, []);
@@ -71,44 +78,47 @@ const NotificationsPage = () => {
     setNotifications(notifications.map(notification => 
       notification.id === id ? { ...notification, isRead: true } : notification
     ));
-    toast.success("Notification marked as read");
+    addToast({
+      title: "Success",
+      description: "Notification marked as read",
+      color: "success"
+    });
   };
 
   const markAllAsRead = () => {
     setNotifications(notifications.map(notification => ({ ...notification, isRead: true })));
-    toast.success("All notifications marked as read");
+    addToast({
+      title: "Success",
+      description: "All notifications marked as read",
+      color: "success"
+    });
   };
 
   const deleteNotification = (id: number) => {
-    setNotifications(notifications.filter(notification => notification.id !== id));
-    toast.success("Notification deleted successfully");
+    setIsVisible(prev => ({ ...prev, [id]: false }));
+    
+    // Remove from state after animation completes
+    setTimeout(() => {
+      setNotifications(notifications.filter(notification => notification.id !== id));
+    }, 300);
+    
+    addToast({
+      title: "Success",
+      description: "Notification deleted successfully",
+      color: "success"
+    });
   };
 
-  const getTypeColor = (type: string) => {
+  const getNotificationColor = (type: string) => {
     switch (type) {
       case "order":
-        return "bg-blue-100 text-blue-800";
+        return "primary";
       case "promo":
-        return "bg-purple-100 text-purple-800";
-      case "system":
-        return "bg-gray-100 text-gray-800";
-      case "restock":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getAlertVariant = (type: string) => {
-    switch (type) {
-      case "order":
-        return "default";
-      case "promo":
-        return "destructive";
+        return "secondary";
       case "system":
         return "default";
       case "restock":
-        return "default";
+        return "success";
       default:
         return "default";
     }
@@ -132,7 +142,7 @@ const NotificationsPage = () => {
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col font-inter">
       <Header />
       
       <main className="flex-grow py-10">
@@ -148,10 +158,11 @@ const NotificationsPage = () => {
             </h1>
             
             <Button 
-              onClick={markAllAsRead}
-              variant="ghost"
+              color="default"
+              variant="bordered"
               className="text-sm"
               disabled={unreadCount === 0}
+              onPress={markAllAsRead}
             >
               Mark all as read
             </Button>
@@ -167,53 +178,89 @@ const NotificationsPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
+              className="space-y-4"
             >
-              <div className="space-y-4">
-                {notifications.map((notification) => (
-                  <Alert 
+              {notifications.map((notification) => (
+                isVisible[notification.id] !== false && (
+                  <motion.div
                     key={notification.id}
-                    variant={getAlertVariant(notification.type)}
-                    className={`transition-colors ${!notification.isRead ? "border-l-4 border-l-black bg-gray-50" : ""}`}
+                    initial={{ opacity: 1, height: "auto" }}
+                    animate={{ 
+                      opacity: isVisible[notification.id] ? 1 : 0,
+                      height: isVisible[notification.id] ? "auto" : 0
+                    }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <div className="flex flex-col sm:flex-row sm:justify-between w-full">
-                      <div>
-                        <div className="flex items-center mb-2">
-                          <AlertTitle className={`${!notification.isRead ? "font-bold" : ""}`}>
-                            {notification.title}
-                          </AlertTitle>
-                          <span className={`text-xs px-2 py-1 rounded ml-3 ${getTypeColor(notification.type)}`}>
-                            {getTypeLabel(notification.type)}
-                          </span>
-                        </div>
-                        
-                        <AlertDescription className="text-gray-600 mb-2">{notification.message}</AlertDescription>
-                        <p className="text-xs text-gray-500">{notification.date}</p>
-                      </div>
-                      
-                      <div className="flex items-center space-x-4 mt-4 sm:mt-0">
-                        {!notification.isRead && (
+                    <Alert 
+                      color={getNotificationColor(notification.type)}
+                      variant={!notification.isRead ? "bordered" : "faded"}
+                      title={notification.title}
+                      description={notification.message}
+                      className={`transition-all ${!notification.isRead ? "border-l-4" : ""} mb-4`}
+                      endContent={
+                        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-2">
+                          <span className="text-xs text-gray-500">{notification.date}</span>
+                          {!notification.isRead && (
+                            <Button 
+                              color="default"
+                              variant="light"
+                              size="sm"
+                              onPress={() => markAsRead(notification.id)}
+                            >
+                              Mark as read
+                            </Button>
+                          )}
                           <Button 
-                            onClick={() => markAsRead(notification.id)}
-                            variant="link"
-                            className="text-sm p-0 h-auto"
+                            color="danger"
+                            variant="light"
+                            size="sm"
+                            onPress={() => deleteNotification(notification.id)}
                           >
-                            Mark as read
+                            Delete
                           </Button>
-                        )}
-                        <Button 
-                          onClick={() => deleteNotification(notification.id)}
-                          variant="link"
-                          className="text-sm text-gray-500 hover:text-red-500 p-0 h-auto"
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    </div>
-                  </Alert>
-                ))}
-              </div>
+                        </div>
+                      }
+                    />
+                  </motion.div>
+                )
+              ))}
             </motion.div>
           )}
+          
+          {/* Examples showing different alert styles */}
+          <div className="mt-16">
+            <h2 className="text-xl font-bold mb-6">Alert Styles</h2>
+            <div className="space-y-4">
+              <Alert
+                hideIconWrapper
+                color="secondary"
+                description="This is a bordered variant alert"
+                title="Bordered Alert"
+                variant="bordered"
+              />
+              
+              <Alert
+                color="success"
+                description="Your action has been completed successfully. We'll notify you when updates are available."
+                title="Success Notification"
+                variant="faded"
+                onClose={() => {}}
+              />
+              
+              <Alert
+                color="warning"
+                description="Upgrade to a paid plan to continue"
+                title="You have no credits left"
+                variant="faded"
+                endContent={
+                  <Button color="warning" size="sm" variant="flat" onPress={() => {}}>
+                    Upgrade
+                  </Button>
+                }
+              />
+            </div>
+          </div>
         </div>
       </main>
       
