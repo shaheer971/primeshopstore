@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
+import { ProductGridSkeleton } from "../components/ProductSkeleton";
 import { products, getAllCategories } from "../data/products";
 import { Button } from "@/components/ui/button";
 
@@ -25,6 +27,7 @@ const ShopPage = () => {
   const [filteredProducts, setFilteredProducts] = useState(products);
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortBy, setSortBy] = useState("featured");
+  const [isLoading, setIsLoading] = useState(true);
   const categories = ["All", ...getAllCategories()];
   
   // Featured collections with specific filters
@@ -35,6 +38,13 @@ const ShopPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = "Shop - PrimeShop";
+    
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -54,7 +64,11 @@ const ShopPage = () => {
         result.sort((a, b) => b.price - a.price);
         break;
       case "newest":
-        result.sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
+        result.sort((a, b) => {
+          const dateA = a.releaseDate ? new Date(a.releaseDate).getTime() : 0;
+          const dateB = b.releaseDate ? new Date(b.releaseDate).getTime() : 0;
+          return dateB - dateA;
+        });
         break;
       case "popular":
         result = result.filter(p => p.isPopular);
@@ -181,19 +195,23 @@ const ShopPage = () => {
               </Button>
             </div>
             
-            <motion.div
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
-            >
-              {newArrivals.map((product) => (
-                <motion.div key={product.id} variants={item}>
-                  <ProductCard product={product} />
-                </motion.div>
-              ))}
-            </motion.div>
+            {isLoading ? (
+              <ProductGridSkeleton count={4} />
+            ) : (
+              <motion.div
+                variants={container}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
+              >
+                {newArrivals.map((product) => (
+                  <motion.div key={product.id} variants={item}>
+                    <ProductCard product={product} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </section>
 
           {/* Best Sellers Section */}
@@ -205,19 +223,23 @@ const ShopPage = () => {
               </Button>
             </div>
             
-            <motion.div
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
-            >
-              {bestSellers.map((product) => (
-                <motion.div key={product.id} variants={item}>
-                  <ProductCard product={product} />
-                </motion.div>
-              ))}
-            </motion.div>
+            {isLoading ? (
+              <ProductGridSkeleton count={4} />
+            ) : (
+              <motion.div
+                variants={container}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
+              >
+                {bestSellers.map((product) => (
+                  <motion.div key={product.id} variants={item}>
+                    <ProductCard product={product} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </section>
 
           {/* Special Offers */}
@@ -229,19 +251,23 @@ const ShopPage = () => {
               </Button>
             </div>
             
-            <motion.div
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
-            >
-              {onSale.map((product) => (
-                <motion.div key={product.id} variants={item}>
-                  <ProductCard product={product} />
-                </motion.div>
-              ))}
-            </motion.div>
+            {isLoading ? (
+              <ProductGridSkeleton count={4} />
+            ) : (
+              <motion.div
+                variants={container}
+                initial="hidden"
+                whileInView="show"
+                viewport={{ once: true }}
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
+              >
+                {onSale.map((product) => (
+                  <motion.div key={product.id} variants={item}>
+                    <ProductCard product={product} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </section>
 
           {/* Subscribe Banner */}

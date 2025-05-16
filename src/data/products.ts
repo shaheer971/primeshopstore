@@ -1,4 +1,3 @@
-
 export interface Product {
   id: number;
   name: string;
@@ -7,6 +6,8 @@ export interface Product {
   images: string[];
   description: string;
   isOnSale?: boolean;
+  isPopular?: boolean;
+  releaseDate?: string;
   category: string;
   sizes: string[];
   benefits: string[];
@@ -28,6 +29,8 @@ export const products: Product[] = [
     ],
     description: "Inspired By The Past, Built For Tomorrow. We Remixed Elements From The AJ3, AJ4 And AJ5 To Create A Fresh Take On The Classics. Smooth Leather And Soft Suede Give You Style And Durability While Textile Panels Add Breathability. Plus, Embroidered Details Infuse These Kicks With Jordan Heritage.",
     isOnSale: true,
+    isPopular: true,
+    releaseDate: "2023-10-15",
     category: "Jordan",
     sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12", "12.5", "13", "13.5", "14", "15"],
     benefits: [
@@ -51,6 +54,8 @@ export const products: Product[] = [
       "/placeholder.svg"
     ],
     description: "The Jordan Spizike Low takes inspiration from several iconic Air Jordan models, combining their best features for a unique and stylish look. With premium materials and exceptional comfort, these sneakers are perfect for everyday wear.",
+    isPopular: true,
+    releaseDate: "2023-07-22",
     category: "Jordan",
     sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12"],
     benefits: [
@@ -99,6 +104,8 @@ export const products: Product[] = [
     ],
     description: "The Jordan Spizike Low combines elements from several classic Air Jordan models, creating a hybrid that pays homage to Spike Lee's contributions to the Jordan legacy. With its distinctive design and premium materials, this sneaker stands out in any collection.",
     isOnSale: true,
+    isPopular: true,
+    releaseDate: "2023-06-10",
     category: "Jordan",
     sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12"],
     benefits: [
@@ -170,6 +177,8 @@ export const products: Product[] = [
     ],
     description: "The Air Jordan 4 Mid brings a fresh perspective to the classic AJ4 silhouette. With iconic design elements and modern comfort technology, these sneakers deliver both style and performance for everyday wear.",
     isOnSale: true,
+    isPopular: true,
+    releaseDate: "2023-05-18",
     category: "Jordan",
     sizes: ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12"],
     benefits: [
