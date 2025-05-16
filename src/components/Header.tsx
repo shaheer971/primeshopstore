@@ -1,11 +1,21 @@
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { 
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 import { Logo, CartIcon, NotificationIcon, UserIcon, SearchIcon } from "./icons/Icons";
 
 // This is a mock for the HeroUI Badge component that was requested
-const Badge = ({ 
+const BadgeMock = ({ 
   children, 
   content, 
   color = "danger", 
@@ -36,6 +46,7 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(5);
   const [notificationCount, setNotificationCount] = useState(3);
+  const location = useLocation();
   
   const navLinks = [
     { name: "Home", path: "/" },
@@ -45,8 +56,12 @@ const Header = () => {
     { name: "FAQ", path: "/faq" },
   ];
 
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
   return (
-    <header className="border-b border-gray-200 py-4">
+    <header className="border-b border-gray-200 py-4 sticky top-0 bg-white z-50">
       <div className="container-custom flex justify-between items-center">
         <Link to="/" className="z-10">
           <Logo />
@@ -74,17 +89,25 @@ const Header = () => {
         </button>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              className="text-gray-800 hover:text-black"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </nav>
+        <NavigationMenu className="hidden lg:flex">
+          <NavigationMenuList className="gap-6">
+            {navLinks.map((link) => (
+              <NavigationMenuItem key={link.name}>
+                <Link
+                  to={link.path}
+                  className={cn(
+                    "text-base font-medium transition-colors hover:text-black",
+                    isActive(link.path)
+                      ? "text-black border-b-2 border-black pb-1"
+                      : "text-gray-600"
+                  )}
+                >
+                  {link.name}
+                </Link>
+              </NavigationMenuItem>
+            ))}
+          </NavigationMenuList>
+        </NavigationMenu>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
@@ -119,35 +142,49 @@ const Header = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className="text-xl py-2"
+                  className={`text-xl py-2 ${isActive(link.path) ? "font-bold" : ""}`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.name}
                 </Link>
               ))}
+              <div className="pt-4 border-t border-gray-200">
+                <Link to="/account" className="text-xl py-2 block" onClick={() => setIsMenuOpen(false)}>
+                  My Account
+                </Link>
+                <Link to="/wishlist" className="text-xl py-2 block" onClick={() => setIsMenuOpen(false)}>
+                  Wishlist
+                </Link>
+                <Link to="/cart" className="text-xl py-2 block" onClick={() => setIsMenuOpen(false)}>
+                  Cart ({cartCount})
+                </Link>
+                <Link to="/notifications" className="text-xl py-2 block" onClick={() => setIsMenuOpen(false)}>
+                  Notifications ({notificationCount})
+                </Link>
+              </div>
             </div>
           </motion.nav>
         )}
 
         {/* Right side icons */}
-        <div className="flex items-center space-x-4 z-10">
+        <div className="flex items-center space-x-6 z-10">
           <Link to="/search" className="hidden md:block">
-            <SearchIcon className="text-gray-800" />
+            <SearchIcon className="text-gray-800 hover:text-black transition-colors" />
           </Link>
           <Link to="/account">
-            <UserIcon className="text-gray-800" />
+            <UserIcon className="text-gray-800 hover:text-black transition-colors" />
           </Link>
           <Link to="/notifications">
-            <Badge color="danger" content={notificationCount} shape="circle">
-              <NotificationIcon className="text-gray-800" />
-            </Badge>
+            <BadgeMock color="danger" content={notificationCount} shape="circle">
+              <NotificationIcon className="text-gray-800 hover:text-black transition-colors" />
+            </BadgeMock>
           </Link>
           <Link to="/cart">
-            <Badge color="danger" content={cartCount} shape="circle">
-              <CartIcon className="text-gray-800" />
-            </Badge>
+            <BadgeMock color="danger" content={cartCount} shape="circle">
+              <CartIcon className="text-gray-800 hover:text-black transition-colors" />
+            </BadgeMock>
           </Link>
-          <Link to="/shop" className="bg-black text-white px-4 py-2 rounded-full hidden md:flex">
+          <Link to="/shop" className="bg-black text-white px-4 py-2 rounded-full hidden md:flex hover:opacity-90 transition-opacity">
             Shop Now
           </Link>
         </div>
