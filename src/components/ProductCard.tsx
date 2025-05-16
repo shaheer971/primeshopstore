@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HeartIcon } from './icons/Icons';
 import { Product } from '../data/products';
+import { addToast } from './ui/hero-toast';
 
 interface ProductCardProps {
   product: Product;
@@ -91,6 +92,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     e.preventDefault();
     e.stopPropagation();
     setIsFavorite(!isFavorite);
+    
+    // Show toast notification
+    addToast({
+      title: isFavorite ? "Removed from favorites" : "Added to favorites",
+      description: `${product.name} has been ${isFavorite ? "removed from" : "added to"} your favorites`,
+      color: isFavorite ? "danger" : "success",
+      duration: 2000,
+    });
   };
 
   return (

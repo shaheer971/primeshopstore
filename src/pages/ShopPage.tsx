@@ -171,7 +171,7 @@ const ShopPage = () => {
                 className="group relative overflow-hidden rounded-xl shadow-lg"
               >
                 <img 
-                  src="https://images.unsplash.com/photo-1721322800607-8c38375eef04?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80" 
+                  src="https://images.unsplash.com/photo-1535268647677-300dbf3d78d1?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=800&q=80" 
                   alt="On Sale" 
                   className="w-full h-[400px] object-cover transition-transform duration-500 group-hover:scale-110"
                 />
