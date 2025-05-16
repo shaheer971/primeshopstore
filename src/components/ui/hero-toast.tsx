@@ -23,6 +23,12 @@ export const addToast = (options: ToastOptions) => {
         return "success";
       case "danger":
         return "destructive";
+      case "warning":
+        return "warning";
+      case "primary":
+        return "primary";
+      case "secondary":
+        return "secondary";
       default:
         return "default";
     }
@@ -31,5 +37,9 @@ export const addToast = (options: ToastOptions) => {
   toast[getVariant()]?.(title || description, {
     description: title ? description : undefined,
     duration,
+    action: {
+      label: "×",
+      onClick: () => toast.dismiss(),
+    },
   });
 };

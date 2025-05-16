@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { getFAQs } from "../../data/faqs";
 import { Button } from "@/components/ui/button";
-import { Alert } from "../ui/hero-ui";
 
 const HomeFAQ = () => {
   const faqs = getFAQs(4);

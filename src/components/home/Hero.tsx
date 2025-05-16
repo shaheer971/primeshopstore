@@ -10,8 +10,8 @@ const Hero = () => {
     <section className="relative bg-gray-900 text-white">
       <div className="absolute inset-0 bg-black">
         <img 
-          src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&h=800&q=80" 
-          alt="Latest sneakers" 
+          src="/lovable-uploads/ca2a5a61-910a-4eaf-8a2d-2e838d3c1ec4.png" 
+          alt="Skiing in mountains" 
           className="w-full h-full object-cover opacity-70"
         />
       </div>

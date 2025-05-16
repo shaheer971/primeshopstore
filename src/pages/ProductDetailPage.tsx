@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -7,6 +8,7 @@ import { getProductById, getFeaturedProducts } from "../data/products";
 import { HeartIcon, StarIcon } from "../components/icons/Icons";
 import ProductCard from "../components/ProductCard";
 import { Button } from "@/components/ui/button";
+import { addToast } from "../components/ui/hero-toast";
 import { 
   Select,
   SelectContent, 
@@ -14,6 +16,14 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -48,7 +58,12 @@ const ProductDetailPage = () => {
 
   const handleAddToCart = () => {
     if (!selectedSize) {
-      alert("Please select a size");
+      addToast({
+        title: "Size Selection Required",
+        description: "Please select a size before adding to cart",
+        color: "warning",
+        duration: 5000,
+      });
       return;
     }
     
@@ -58,13 +73,23 @@ const ProductDetailPage = () => {
       quantity
     });
     
-    // Here you would typically dispatch to a cart context or state manager
-    alert(`Added ${quantity} ${product?.name} (Size: ${selectedSize}) to cart!`);
+    // Use the toast notification instead of an alert
+    addToast({
+      title: "Added to Cart",
+      description: `${quantity} x ${product?.name} (Size: ${selectedSize}) has been added to your cart`,
+      color: "success",
+      duration: 5000,
+    });
   };
 
   const handleBuyNow = () => {
     if (!selectedSize) {
-      alert("Please select a size");
+      addToast({
+        title: "Size Selection Required",
+        description: "Please select a size before proceeding",
+        color: "warning",
+        duration: 5000,
+      });
       return;
     }
     
@@ -89,15 +114,21 @@ const ProductDetailPage = () => {
       <main className="flex-grow py-10">
         <div className="container-custom">
           {/* Breadcrumb */}
-          <nav className="mb-6 text-sm text-gray-600">
-            <ol className="flex flex-wrap items-center gap-2">
-              <li><Link to="/" className="hover:text-black">Home</Link></li>
-              <li className="mx-1">&gt;</li>
-              <li><Link to="/products" className="hover:text-black">Products</Link></li>
-              <li className="mx-1">&gt;</li>
-              <li>{product.name}</li>
-            </ol>
-          </nav>
+          <Breadcrumb className="mb-6">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/products">Products</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{product.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
             {/* Product Images */}
