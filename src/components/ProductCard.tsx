@@ -93,7 +93,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     e.stopPropagation();
     setIsFavorite(!isFavorite);
     
-    // Show toast notification
+    // Show toast notification with customized Hero UI toast
     addToast({
       title: isFavorite ? "Removed from favorites" : "Added to favorites",
       description: `${product.name} has been ${isFavorite ? "removed from" : "added to"} your favorites`,

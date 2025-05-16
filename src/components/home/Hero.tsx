@@ -3,13 +3,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRightIcon } from "../icons/Icons";
+import { Alert } from "../ui/hero-ui";
 
 const Hero = () => {
   return (
     <section className="relative bg-gray-900 text-white">
       <div className="absolute inset-0 bg-black">
         <img 
-          src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&h=800&q=80" 
+          src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&h=800&q=80" 
           alt="Latest sneakers" 
           className="w-full h-full object-cover opacity-70"
         />

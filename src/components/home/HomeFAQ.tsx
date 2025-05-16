@@ -2,13 +2,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { getFAQs } from "../../data/faqs";
-import { 
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent 
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import { Alert } from "../ui/hero-ui";
 
 const HomeFAQ = () => {
   const faqs = getFAQs(4);
@@ -19,18 +14,32 @@ const HomeFAQ = () => {
         <h2 className="section-title text-center mb-12">Frequently Asked Questions (FAQ)</h2>
         
         <div className="max-w-3xl mx-auto">
-          <Accordion type="single" collapsible className="w-full">
+          <div className="space-y-4">
             {faqs.map((faq) => (
-              <AccordionItem key={faq.id} value={`item-${faq.id}`}>
-                <AccordionTrigger className="text-left font-semibold text-lg">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-600">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
+              <div key={faq.id} className="border bg-white rounded-lg overflow-hidden">
+                <details className="group">
+                  <summary className="flex justify-between items-center p-4 font-semibold text-lg cursor-pointer">
+                    {faq.question}
+                    <span className="transition group-open:rotate-180">
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        fill="none" 
+                        viewBox="0 0 24 24" 
+                        strokeWidth={1.5} 
+                        stroke="currentColor" 
+                        className="w-5 h-5"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-4 pb-4 text-gray-600">
+                    {faq.answer}
+                  </div>
+                </details>
+              </div>
             ))}
-          </Accordion>
+          </div>
         </div>
         
         <div className="text-center mt-8">
